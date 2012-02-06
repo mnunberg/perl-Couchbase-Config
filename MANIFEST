@@ -1,0 +1,10 @@
+lib/Couchbase/Config/Daemon.pm
+lib/Couchbase/Config/UA.pm
+lib/Couchbase/Config/Resource.pm
+lib/Couchbase/Config/Handlers.pm
+lib/Couchbase/Config/Commands.pm
+lib/Couchbase/Config/Constants.pm
+lib/Couchbase/Config.pm
+
+MANIFEST
+Makefile.PL
