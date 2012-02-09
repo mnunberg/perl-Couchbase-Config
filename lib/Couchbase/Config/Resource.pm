@@ -340,7 +340,7 @@ sub ds_extract {
 package Couchbase::Config::Bucket;
 use strict;
 use warnings;
-use Couchbase::VBucket;
+my $have_couchbase_vbucket = eval 'use Couchbase::VBucket; 1';
 use JSON::XS;
 use Data::Dumper;
 use Log::Fu;
@@ -351,11 +351,15 @@ use Class::XSAccessor {
     accessors => [qw(
         name nodes vbconf json pool
         flushCacheUri
+        bucketType
+        proxyPort
         diff
     )]
 };
 
 *uri_flush_cache = *flushCacheUri;
+*type = *bucketType;
+*port_proxy = *proxyPort;
 
 our %Buckets;
 
@@ -389,25 +393,28 @@ sub destroy_bucket {
 
 sub ds_extract {
     my ($self,$hash) = @_;
-    my $vb = Couchbase::VBucket->parse(encode_json($hash));
-    if($vb) {
-        $self->vbconf($vb);
-    } else {
-        log_err("Couldn't parse vbucket config");
+    
+    if($have_couchbase_vbucket) {
+        my $vb = Couchbase::VBucket->parse(encode_json($hash));
+        if($vb) {
+            $self->vbconf($vb);
+        } else {
+            log_err("Couldn't parse vbucket config");
+        }
     }
     
-    my @nodes_array;    
-    my $curnodes = $self->nodes();
+    my @nodes_array;
     
     foreach my $node (@{$hash->{nodes} }) {
         my $cluster_addr = $node->{hostname};
+        if($cluster_addr !~ /:/) {
+            next;
+        }
         my $nodeobj = Couchbase::Config::Node->ByHostname($cluster_addr);
         $nodeobj->from_structure($node);
         push @nodes_array, $nodeobj;
     }
-    if(@nodes_array) {
-        $self->nodes(\@nodes_array);
-    }
+    $self->nodes(\@nodes_array);
 }
 
 sub map_key {

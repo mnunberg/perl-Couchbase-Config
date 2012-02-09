@@ -1,0 +1,9 @@
+=head1 Couchbase REST API
+
+This module handles interaction with the Couchbase REST management API
+in an event-neutral manner.
+
+You call functions which generate (opaque) request objects, and call
+a central function with the received response - which will return a 
+status code or object to you, indicating things you should know about
+
