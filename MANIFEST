@@ -6,5 +6,8 @@ lib/Couchbase/Config/Commands.pm
 lib/Couchbase/Config/Constants.pm
 lib/Couchbase/Config.pm
 
+t/00-load.t
+
 MANIFEST
+README.pod
 Makefile.PL

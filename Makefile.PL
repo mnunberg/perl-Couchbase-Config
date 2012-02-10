@@ -18,6 +18,7 @@ WriteMakefile(
         'LWP::UserAgent' => 6.0,
         'Constant::Generate' => 0.16,
         'JSON::XS'  => 2.3,
+        'Data::Dumper::Concise' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Couchbase-Config-*' },
